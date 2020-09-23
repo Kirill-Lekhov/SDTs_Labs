@@ -15,22 +15,22 @@ namespace Ducks_vs_Drakes
 
         }
 
-        public override void Move()
-        {
-            KeyboardState kbState = Keyboard.GetState();
+        //public override void Move()
+        //{
+        //    KeyboardState kbState = Keyboard.GetState();
 
-            if (kbState.IsKeyDown(Keys.W))
-                sprPosition.Y -= 5;
-            // base.SetPositionY(base.GetPositionY() - 5);
-            if (kbState.IsKeyDown(Keys.S))
-                sprPosition.Y += 5;
-            if (kbState.IsKeyDown(Keys.A))
-                sprPosition.X -= 5;
-            if (kbState.IsKeyDown(Keys.D))
-                sprPosition.X += 5;
+        //    if (kbState.IsKeyDown(Keys.W))
+        //        sprPosition.Y -= 5;
+        //    // base.SetPositionY(base.GetPositionY() - 5);
+        //    if (kbState.IsKeyDown(Keys.S))
+        //        sprPosition.Y += 5;
+        //    if (kbState.IsKeyDown(Keys.A))
+        //        sprPosition.X -= 5;
+        //    if (kbState.IsKeyDown(Keys.D))
+        //        sprPosition.X += 5;
 
-            base.Move();
-        }
+        //    base.Move();
+        //}
 
         public override void Initialize()
         {

@@ -16,57 +16,65 @@ namespace Ducks_vs_Drakes
         protected Rectangle scrBounds;
 
         protected Random randNum;
+        protected Game1 MyGame;
         protected int stepNum;
-        protected Vector2 newPosition;
         protected Color sprColor;
         protected Vector2 speed;
-        public ColoredBoxes(Game game, ref Texture2D newTexture, Rectangle newRectangle, int Speed) : base(game)
+
+        MouseState mouse;
+        public ColoredBoxes(Game1 game, ref Texture2D newTexture, Rectangle newRectangle, int Speed) : base(game)
         {
             sprTexture = newTexture;
             sprRectangle = newRectangle;
+            MyGame = game;
 
             randNum = new Random(Speed);
             scrBounds = new Rectangle(0, 0, game.Window.ClientBounds.Width, game.Window.ClientBounds.Width);
 
-            sprPosition.X = (float)randNum.NextDouble() * (scrBounds.Width - sprRectangle.Width);
-            sprPosition.Y = (float)randNum.NextDouble() * (scrBounds.Height - sprRectangle.Height);
-
-            stepNum = 0;
+            setSpriteToStart();
+            while (howManyCollides() > 0)
+            {
+                setSpriteToStart();
+            }
 
             sprColor = new Color((byte)randNum.Next(0, 255), (byte)randNum.Next(0, 255), (byte)randNum.Next(0, 255));
+            speed = new Vector2((float)randNum.Next(-5, 5), (float)randNum.Next(-5, 5));
+        }
 
-            speed = new Vector2();
+        bool MouseCollide()
+        {
+            return (this.sprPosition.X + this.sprRectangle.Width > mouse.X &&
+                    this.sprPosition.X < mouse.X &&
+                     this.sprPosition.Y + this.sprRectangle.Height > mouse.Y &&
+                     this.sprPosition.Y < mouse.Y);
+        }
+
+        int howManyCollides()
+        {
+            int howMany = 0;
+            foreach (ColoredBoxes spr in MyGame.Components)
+            {
+                if (this != spr)
+                {
+                    if (this.sprCollide(spr))
+                    {
+                        howMany++;
+                    }
+                }
+            }
+
+            return howMany;
+        }
+
+        void setSpriteToStart()
+        {
+            sprPosition.X = (float)randNum.NextDouble() * (scrBounds.Width - sprRectangle.Width);
+            sprPosition.Y = (float)randNum.NextDouble() * (scrBounds.Height - sprRectangle.Height);
         }
 
         public virtual void Move()
         {
-            if (stepNum > 0)
-            {
-                stepNum--;
-
-                if (sprPosition.X < newPosition.X)
-                    sprPosition.X += speed.X;
-                if (sprPosition.X > newPosition.X)
-                    sprPosition.X -= speed.X;
-                if (sprPosition.Y < newPosition.Y)
-                    sprPosition.Y += speed.Y;
-                if (sprPosition.Y > newPosition.Y)
-                    sprPosition.Y -= speed.Y;
-            }
-
-            if (stepNum == 0)
-            {
-                stepNum = randNum.Next(50, 200);
-                newPosition.X = (float)randNum.NextDouble() * (scrBounds.Width - sprRectangle.Width);
-                newPosition.Y = (float)randNum.NextDouble() * (scrBounds.Height - sprRectangle.Height);
-
-                speed.X = randNum.Next(1, 5);
-                speed.Y = randNum.Next(1, 5);
-
-                sprColor = new Color((byte)randNum.Next(0, 255), (byte)randNum.Next(0, 255), (byte)randNum.Next(0, 255));
-            }
-
-            Check();
+            sprPosition += speed;
         }
 
         void Check()
@@ -89,6 +97,14 @@ namespace Ducks_vs_Drakes
             }
         }
 
+        public bool sprCollide(ColoredBoxes spr)
+        {
+            Rectangle R1 = new Rectangle((int)this.sprPosition.X, (int)this.sprPosition.Y, this.sprRectangle.Width, this.sprRectangle.Height);
+            Rectangle R2 = new Rectangle((int)spr.sprPosition.X, (int)spr.sprPosition.Y, spr.sprRectangle.Width, spr.sprRectangle.Height);
+
+            return R1.Intersects(R2);
+        }
+
         public override void Initialize()
         {
             base.Initialize();
@@ -96,8 +112,41 @@ namespace Ducks_vs_Drakes
 
         public override void Update(GameTime gameTime)
         {
+            mouse = Mouse.GetState();
+            if (mouse.LeftButton == ButtonState.Pressed)
+            {
+                if (MouseCollide())
+                {
+                    MyGame.Score++;
+                    this.Dispose();
+                }
+            }
+
             Move();
+            Check();
+            IsSpriteCollide();
+
+            while (howManyCollides() > 0)
+            {
+                IsSpriteCollide();
+            }
+
             base.Update(gameTime);
+        }
+
+        void IsSpriteCollide()
+        {
+            foreach (ColoredBoxes spr in MyGame.Components)
+            {
+                if (this != spr)
+                {
+                    if (this.sprCollide(spr))
+                    {
+                        this.speed *= -1;
+                        this.sprPosition += this.speed;
+                    }
+                }
+            }
         }
 
         public override void Draw(GameTime gameTime)

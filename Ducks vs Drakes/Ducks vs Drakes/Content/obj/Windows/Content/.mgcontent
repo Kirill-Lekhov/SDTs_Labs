@@ -5,10 +5,12 @@
   <Config />
   <SourceFiles>
     <File>C:/Users/user/source/repos/SDTs_Labs/Ducks vs Drakes/Ducks vs Drakes/Content/background.png</File>
+    <File>C:/Users/user/source/repos/SDTs_Labs/Ducks vs Drakes/Ducks vs Drakes/Content/Circle.png</File>
     <File>C:/Users/user/source/repos/SDTs_Labs/Ducks vs Drakes/Ducks vs Drakes/Content/P2_1.png</File>
     <File>C:/Users/user/source/repos/SDTs_Labs/Ducks vs Drakes/Ducks vs Drakes/Content/Shapes.png</File>
   </SourceFiles>
   <DestFiles>
+    <File xsi:nil="true" />
     <File xsi:nil="true" />
     <File xsi:nil="true" />
     <File xsi:nil="true" />

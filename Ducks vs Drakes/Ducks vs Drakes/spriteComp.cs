@@ -14,6 +14,7 @@ namespace Ducks_vs_Drakes
         protected Rectangle sprRectangle;
         protected Vector2 sprPosition;
         protected Rectangle scrBounds;
+
         public spriteComp(Game game, ref Texture2D newTexture, Rectangle newRectangle, Vector2 newPosition) : base(game)
         {
             sprTexture = newTexture;
@@ -29,16 +30,10 @@ namespace Ducks_vs_Drakes
 
         public override void Update(GameTime gameTime)
         {
-            Move();
             base.Update(gameTime);
         }
 
-        public virtual void Move()
-        {
-            Check();
-        }
-
-        void Check()
+        public void Check()
         {
             if (sprPosition.X < scrBounds.Left)
             {
@@ -56,6 +51,49 @@ namespace Ducks_vs_Drakes
             {
                 sprPosition.Y = scrBounds.Height - sprRectangle.Height;
             }
+        }
+
+        public Vector2 GetPosition()
+        {
+            return sprPosition;
+        }
+
+        public Rectangle GetRectangle()
+        {
+            return sprRectangle;
+        }
+
+        public int GetWidth()
+        {
+            return sprRectangle.Width;
+        }
+
+        public int GetHeight()
+        {
+            return sprRectangle.Height;
+        }
+
+        public void set_position(float x, float y)
+        {
+            sprPosition.X += x;
+            sprPosition.Y += y;
+        }
+
+        public bool check_all_elements_collision()
+        {
+            foreach (spriteComp spr in base.Game.Components)
+            {
+                if (this != spr)
+                {
+                    Rectangle Rec1 = new Rectangle((int)this.GetPosition().X, (int)this.GetPosition().Y, this.GetWidth(), this.GetHeight());
+                    Rectangle Rec2 = new Rectangle((int)spr.GetPosition().X, (int)spr.GetPosition().Y, spr.GetWidth(), spr.GetHeight());
+
+                    if (Rec1.Intersects(Rec2))
+                        return false;
+                }
+            }
+
+            return true;
         }
 
         public override void Draw(GameTime gameTime)

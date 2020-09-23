@@ -13,11 +13,18 @@ namespace Ducks_vs_Drakes
     {
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
+        private Texture2D Circle;
+        private Vector2 position = new Vector2(150, 30);
+        MouseState mouse;
+        Vector2 center;
         
-        spriteComp PlayerOneBoard, PlayerTwoBoard, Ball;
-        Texture2D GameShapes, BackGround;
+        //spriteComp PlayerOneBoard, PlayerTwoBoard, Ball;
+        //Texture2D GameShapes, BackGround;
 
-        Random randNum;
+        //Random randNum;
+
+        public int Score;
+        //bool is_win = false;
 
         //mouse click controller
         //bool is_MouseLB_Pressed = false;
@@ -42,6 +49,8 @@ namespace Ducks_vs_Drakes
             base.Initialize();
 
             //mouse click controller
+            center.X = position.X + 250 + 8;
+            center.Y = position.Y + 250 + 8;
             this.IsMouseVisible = true;
         }
 
@@ -54,28 +63,32 @@ namespace Ducks_vs_Drakes
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
             Services.AddService(typeof(SpriteBatch), spriteBatch);
-            GameShapes = Content.Load<Texture2D>("Shapes");
-            randNum = new Random();
-            CreateNewObject();
+            Circle = Content.Load<Texture2D>("Circle");
 
-            BackGround = Content.Load<Texture2D>("background");
+            //GameShapes = Content.Load<Texture2D>("Shapes");
+
+            //randNum = new Random();
+            
+            //CreateNewObject();
+
+            //BackGround = Content.Load<Texture2D>("background");
             // TODO: use this.Content to load your game content here
         }
 
         protected void CreateNewObject()
         {
-            //PlayerOneBoard = new gameObj1(this, ref GameShapes, new Rectangle(0, 0, 20, 100), new Vector2(100, 150));
-            //PlayerTwoBoard = new gameObj2(this, ref GameShapes, new Rectangle(26, 0, 20, 100), new Vector2(600, 150));
-            //Ball = new spriteComp(this, ref GameShapes, new Rectangle(51, 0, 20, 100), new Vector2(400, 150));
+            //PlayerOneBoard = new spriteComp(this, ref GameShapes, new Rectangle(0, 0, 20, 100), new Vector2(100, 150));
+            //PlayerTwoBoard = new spriteComp(this, ref GameShapes, new Rectangle(26, 0, 20, 100), new Vector2(600, 150));
+            //Ball = new spriteComp(this, ref GameShapes, new Rectangle(51, 0, 20, 20), new Vector2(400, 150));
 
             //Components.Add(PlayerOneBoard);
             //Components.Add(PlayerTwoBoard);
             //Components.Add(Ball);
 
-            for (int i = 0; i < randNum.Next(50, 200); i++)
-            {
-                Components.Add(new ColoredBoxes(this, ref GameShapes, new Rectangle(51, 0, 20, 100), i));
-            }
+            //for (int i = 0; i < 10; i++)
+            //{
+            //    Components.Add(new ColoredBoxes(this, ref GameShapes, new Rectangle(51, 0, 20, 100), i));
+            //}
         }
 
         /// <summary>
@@ -99,17 +112,61 @@ namespace Ducks_vs_Drakes
 
             // TODO: Add your update logic here
 
+            mouse = Mouse.GetState();
+            if (mouse.LeftButton == ButtonState.Pressed)
+                if (IsPointInCircle()) Window.Title = "Вы попали в мишень!";
+                else Window.Title = "Вы не попали в мишень!";
+
+
+            //if (is_win == false)
+            //{
+            //    Window.Title = "Уничтожено " + Score.ToString() + " за " + gameTime.TotalGameTime.Seconds + " с."; 
+            //}
+
+            //if (Score == 10 && is_win == false)
+            //{
+            //    Window.Title = "Вы уничтожили всех за: " + gameTime.TotalGameTime.Seconds + " с.";
+            //}
             // Keyboard controller
             //KeyboardState kbState = Keyboard.GetState();
+            //Rectangle Current_Rect = PlayerOneBoard.GetRectangle();
+            //float X_change = 0, Y_change = 0, change = 1;
 
             //if (kbState.IsKeyDown(Keys.Up))
-            //    Ball.sprPosition.Y -= 1;
+            //    Y_change -= change;
             //if (kbState.IsKeyDown(Keys.Down))
-            //    Ball.sprPosition.Y += 1;
+            //    Y_change += change;
             //if (kbState.IsKeyDown(Keys.Left))
-            //    Ball.sprPosition.X -= 1;
+            //    X_change -= change;
             //if (kbState.IsKeyDown(Keys.Right))
-            //    Ball.sprPosition.X += 1;
+            //    X_change += change;
+
+            //PlayerOneBoard.set_position(X_change, Y_change);
+
+            //if (!PlayerOneBoard.check_all_elements_collision())
+            //    PlayerOneBoard.set_position(-X_change, -Y_change);
+
+            //PlayerOneBoard.Check();
+
+            //X_change = 0;
+            //Y_change = 0;
+
+            //if (kbState.IsKeyDown(Keys.W))
+            //    Y_change -= change;
+            //if (kbState.IsKeyDown(Keys.S))
+            //    Y_change += change;
+            //if (kbState.IsKeyDown(Keys.A))
+            //    X_change -= change;
+            //if (kbState.IsKeyDown(Keys.D))
+            //    X_change += change;
+
+            //PlayerTwoBoard.set_position(X_change, Y_change);
+
+            //if (!PlayerTwoBoard.check_all_elements_collision())
+            //    PlayerTwoBoard.set_position(-X_change, -Y_change);
+
+            //PlayerTwoBoard.Check();
+
 
 
             //mouse move controller
@@ -157,6 +214,14 @@ namespace Ducks_vs_Drakes
             base.Update(gameTime);
         }
 
+        bool IsPointInCircle()
+        {
+            double length = Math.Pow((Math.Pow((mouse.X - center.X), 2) + Math.Pow((mouse.Y - center.Y), 2)), 0.5);
+            if (length <= 251) return true;
+            else return false;
+        }
+
+
         /// <summary>
         /// This is called when the game should draw itself.
         /// </summary>
@@ -166,10 +231,13 @@ namespace Ducks_vs_Drakes
             graphics.GraphicsDevice.Clear(Color.CornflowerBlue);
 
             spriteBatch.Begin();
-            spriteBatch.Draw(BackGround, new Rectangle(0, 0, 800, 480), Color.White);
+            spriteBatch.Draw(Circle, position, Color.White);
+            spriteBatch.End();
+
+            //spriteBatch.Draw(BackGround, new Rectangle(0, 0, 800, 480), Color.White);
             // TODO: Add your drawing code here
             base.Draw(gameTime);
-            spriteBatch.End();
+            //spriteBatch.End();
         }
     }
 }
