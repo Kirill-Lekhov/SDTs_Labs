@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PipelineBuildEvent xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <SourceFile>C:/Users/user/source/repos/SDTs_Labs/Ducks vs Drakes/Ducks vs Drakes/Content/background.png</SourceFile>
-  <SourceTime>2020-09-23T12:47:27.5486928+03:00</SourceTime>
+  <SourceTime>2020-09-23T15:12:04.3620213+03:00</SourceTime>
   <DestFile>C:/Users/user/source/repos/SDTs_Labs/Ducks vs Drakes/Ducks vs Drakes/Content/bin/Windows/Content/background.xnb</DestFile>
-  <DestTime>2020-09-23T12:47:36.7225144+03:00</DestTime>
+  <DestTime>2020-09-23T15:12:10.2562785+03:00</DestTime>
   <Importer>TextureImporter</Importer>
   <ImporterTime>2018-12-08T19:35:54+03:00</ImporterTime>
   <Processor>TextureProcessor</Processor>

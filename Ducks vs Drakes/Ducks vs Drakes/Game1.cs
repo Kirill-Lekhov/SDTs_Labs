@@ -1,6 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using System;
 using System.Net.Mime;
 
 namespace Ducks_vs_Drakes
@@ -12,9 +13,15 @@ namespace Ducks_vs_Drakes
     {
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
-        spriteComp gameObject;
-        Texture2D texture;
-        Texture2D backTexture;
+        
+        spriteComp PlayerOneBoard, PlayerTwoBoard, Ball;
+        Texture2D GameShapes, BackGround;
+
+        Random randNum;
+
+        //mouse click controller
+        //bool is_MouseLB_Pressed = false;
+        //Vector2 new_position = new Vector2();
 
         public Game1()
         {
@@ -33,6 +40,9 @@ namespace Ducks_vs_Drakes
             // TODO: Add your initialization logic here
 
             base.Initialize();
+
+            //mouse click controller
+            this.IsMouseVisible = true;
         }
 
         /// <summary>
@@ -44,17 +54,28 @@ namespace Ducks_vs_Drakes
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
             Services.AddService(typeof(SpriteBatch), spriteBatch);
-            texture = Content.Load<Texture2D>("Shapes");
+            GameShapes = Content.Load<Texture2D>("Shapes");
+            randNum = new Random();
             CreateNewObject();
 
-            backTexture = Content.Load<Texture2D>("background");
+            BackGround = Content.Load<Texture2D>("background");
             // TODO: use this.Content to load your game content here
         }
 
         protected void CreateNewObject()
         {
-            gameObject = new spriteComp(this, ref texture, new Rectangle(0, 0, 20, 100), new Vector2(100, 150));
-            Components.Add(gameObject);
+            //PlayerOneBoard = new gameObj1(this, ref GameShapes, new Rectangle(0, 0, 20, 100), new Vector2(100, 150));
+            //PlayerTwoBoard = new gameObj2(this, ref GameShapes, new Rectangle(26, 0, 20, 100), new Vector2(600, 150));
+            //Ball = new spriteComp(this, ref GameShapes, new Rectangle(51, 0, 20, 100), new Vector2(400, 150));
+
+            //Components.Add(PlayerOneBoard);
+            //Components.Add(PlayerTwoBoard);
+            //Components.Add(Ball);
+
+            for (int i = 0; i < randNum.Next(50, 200); i++)
+            {
+                Components.Add(new ColoredBoxes(this, ref GameShapes, new Rectangle(51, 0, 20, 100), i));
+            }
         }
 
         /// <summary>
@@ -78,6 +99,61 @@ namespace Ducks_vs_Drakes
 
             // TODO: Add your update logic here
 
+            // Keyboard controller
+            //KeyboardState kbState = Keyboard.GetState();
+
+            //if (kbState.IsKeyDown(Keys.Up))
+            //    Ball.sprPosition.Y -= 1;
+            //if (kbState.IsKeyDown(Keys.Down))
+            //    Ball.sprPosition.Y += 1;
+            //if (kbState.IsKeyDown(Keys.Left))
+            //    Ball.sprPosition.X -= 1;
+            //if (kbState.IsKeyDown(Keys.Right))
+            //    Ball.sprPosition.X += 1;
+
+
+            //mouse move controller
+            //MouseState mState = Mouse.GetState();
+            //Ball.sprPosition.Y = mState.Y;
+            //Ball.sprPosition.X = mState.X;
+
+            //Mouse Click Controller
+            //MouseState mState = Mouse.GetState();
+
+            //if (mState.LeftButton == ButtonState.Pressed)
+            //{
+            //    is_MouseLB_Pressed = true;
+            //    new_position.X = mState.X;
+            //    new_position.Y = mState.Y;
+            //}
+
+            //if (is_MouseLB_Pressed)
+            //{
+            //    if (new_position.X - Ball.sprPosition.X > 0)
+            //    {
+            //        Ball.sprPosition.X += 1;
+            //    }
+            //    else 
+            //    {
+            //        Ball.sprPosition.X -= 1;
+            //    }
+
+            //    if (new_position.Y - Ball.sprPosition.Y > 0)
+            //    {
+            //        Ball.sprPosition.Y += 1;
+            //    }
+            //    else
+            //    {
+            //        Ball.sprPosition.Y -= 1;
+            //    }
+
+            //    if (Ball.sprPosition == new_position)
+            //    {
+            //        is_MouseLB_Pressed = false;
+            //    }
+            //}
+
+
             base.Update(gameTime);
         }
 
@@ -90,7 +166,7 @@ namespace Ducks_vs_Drakes
             graphics.GraphicsDevice.Clear(Color.CornflowerBlue);
 
             spriteBatch.Begin();
-            spriteBatch.Draw(backTexture, new Rectangle(0, 0, 800, 600), Color.White);
+            spriteBatch.Draw(BackGround, new Rectangle(0, 0, 800, 480), Color.White);
             // TODO: Add your drawing code here
             base.Draw(gameTime);
             spriteBatch.End();
