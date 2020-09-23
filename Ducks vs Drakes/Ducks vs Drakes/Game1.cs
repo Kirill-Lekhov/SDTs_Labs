@@ -1,6 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using System.Net.Mime;
 
 namespace Ducks_vs_Drakes
 {
@@ -11,6 +12,9 @@ namespace Ducks_vs_Drakes
     {
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
+        spriteComp gameObject;
+        Texture2D texture;
+        Texture2D backTexture;
 
         public Game1()
         {
@@ -39,8 +43,18 @@ namespace Ducks_vs_Drakes
         {
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
+            Services.AddService(typeof(SpriteBatch), spriteBatch);
+            texture = Content.Load<Texture2D>("Shapes");
+            CreateNewObject();
 
+            backTexture = Content.Load<Texture2D>("background");
             // TODO: use this.Content to load your game content here
+        }
+
+        protected void CreateNewObject()
+        {
+            gameObject = new spriteComp(this, ref texture, new Rectangle(0, 0, 20, 100), new Vector2(100, 150));
+            Components.Add(gameObject);
         }
 
         /// <summary>
@@ -73,11 +87,13 @@ namespace Ducks_vs_Drakes
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Draw(GameTime gameTime)
         {
-            GraphicsDevice.Clear(Color.CornflowerBlue);
+            graphics.GraphicsDevice.Clear(Color.CornflowerBlue);
 
+            spriteBatch.Begin();
+            spriteBatch.Draw(backTexture, new Rectangle(0, 0, 800, 600), Color.White);
             // TODO: Add your drawing code here
-
             base.Draw(gameTime);
+            spriteBatch.End();
         }
     }
 }
