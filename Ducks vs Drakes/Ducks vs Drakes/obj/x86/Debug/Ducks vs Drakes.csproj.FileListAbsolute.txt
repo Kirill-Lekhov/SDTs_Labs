@@ -1,0 +1,23 @@
+C:\Users\user\source\repos\Ducks vs Drakes\Ducks vs Drakes\bin\Windows\x86\Debug\Ducks vs Drakes.exe
+C:\Users\user\source\repos\Ducks vs Drakes\Ducks vs Drakes\bin\Windows\x86\Debug\Ducks vs Drakes.pdb
+C:\Users\user\source\repos\Ducks vs Drakes\Ducks vs Drakes\bin\Windows\x86\Debug\MonoGame.Framework.dll
+C:\Users\user\source\repos\Ducks vs Drakes\Ducks vs Drakes\bin\Windows\x86\Debug\SharpDX.MediaFoundation.dll
+C:\Users\user\source\repos\Ducks vs Drakes\Ducks vs Drakes\bin\Windows\x86\Debug\SharpDX.dll
+C:\Users\user\source\repos\Ducks vs Drakes\Ducks vs Drakes\bin\Windows\x86\Debug\SharpDX.XAudio2.dll
+C:\Users\user\source\repos\Ducks vs Drakes\Ducks vs Drakes\bin\Windows\x86\Debug\SharpDX.DXGI.dll
+C:\Users\user\source\repos\Ducks vs Drakes\Ducks vs Drakes\bin\Windows\x86\Debug\SharpDX.Direct3D11.dll
+C:\Users\user\source\repos\Ducks vs Drakes\Ducks vs Drakes\bin\Windows\x86\Debug\SharpDX.Direct2D1.dll
+C:\Users\user\source\repos\Ducks vs Drakes\Ducks vs Drakes\bin\Windows\x86\Debug\SharpDX.XInput.dll
+C:\Users\user\source\repos\Ducks vs Drakes\Ducks vs Drakes\bin\Windows\x86\Debug\MonoGame.Framework.xml
+C:\Users\user\source\repos\Ducks vs Drakes\Ducks vs Drakes\bin\Windows\x86\Debug\SharpDX.MediaFoundation.xml
+C:\Users\user\source\repos\Ducks vs Drakes\Ducks vs Drakes\bin\Windows\x86\Debug\SharpDX.xml
+C:\Users\user\source\repos\Ducks vs Drakes\Ducks vs Drakes\bin\Windows\x86\Debug\SharpDX.XAudio2.xml
+C:\Users\user\source\repos\Ducks vs Drakes\Ducks vs Drakes\bin\Windows\x86\Debug\SharpDX.DXGI.xml
+C:\Users\user\source\repos\Ducks vs Drakes\Ducks vs Drakes\bin\Windows\x86\Debug\SharpDX.Direct3D11.xml
+C:\Users\user\source\repos\Ducks vs Drakes\Ducks vs Drakes\bin\Windows\x86\Debug\SharpDX.Direct2D1.xml
+C:\Users\user\source\repos\Ducks vs Drakes\Ducks vs Drakes\bin\Windows\x86\Debug\SharpDX.XInput.xml
+C:\Users\user\source\repos\Ducks vs Drakes\Ducks vs Drakes\obj\x86\Debug\Ducks vs Drakes.csprojAssemblyReference.cache
+C:\Users\user\source\repos\Ducks vs Drakes\Ducks vs Drakes\obj\x86\Debug\Ducks vs Drakes.csproj.CoreCompileInputs.cache
+C:\Users\user\source\repos\Ducks vs Drakes\Ducks vs Drakes\obj\x86\Debug\Ducks vs Drakes.csproj.CopyComplete
+C:\Users\user\source\repos\Ducks vs Drakes\Ducks vs Drakes\obj\x86\Debug\Ducks vs Drakes.exe
+C:\Users\user\source\repos\Ducks vs Drakes\Ducks vs Drakes\obj\x86\Debug\Ducks vs Drakes.pdb
