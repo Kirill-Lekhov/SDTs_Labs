@@ -56,6 +56,14 @@
     <ApplicationManifest>app.manifest</ApplicationManifest>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="button.cs" />
+    <Compile Include="button.Designer.cs">
+      <DependentUpon>button.cs</DependentUpon>
+    </Compile>
+    <Compile Include="CircleComp.cs" />
+    <Compile Include="CircleComp.Designer.cs">
+      <DependentUpon>CircleComp.cs</DependentUpon>
+    </Compile>
     <Compile Include="ColoredBoxes.cs" />
     <Compile Include="ColoredBoxes.Designer.cs">
       <DependentUpon>ColoredBoxes.cs</DependentUpon>

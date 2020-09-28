@@ -48,3 +48,4 @@ C:\Users\user\source\repos\SDTs_Labs\Ducks vs Drakes\Ducks vs Drakes\bin\Windows
 C:\Users\user\source\repos\SDTs_Labs\Ducks vs Drakes\Ducks vs Drakes\bin\Windows\x86\Debug\Content\Shapes.xnb
 C:\Users\user\source\repos\SDTs_Labs\Ducks vs Drakes\Ducks vs Drakes\bin\Windows\x86\Debug\Content\background.xnb
 C:\Users\user\source\repos\SDTs_Labs\Ducks vs Drakes\Ducks vs Drakes\bin\Windows\x86\Debug\Content\Circle.xnb
+C:\Users\user\source\repos\SDTs_Labs\Ducks vs Drakes\Ducks vs Drakes\bin\Windows\x86\Debug\Content\Buttons.xnb

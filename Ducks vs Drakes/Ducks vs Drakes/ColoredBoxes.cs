@@ -5,6 +5,7 @@ using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Content;
+using System.Runtime.ConstrainedExecution;
 
 namespace Ducks_vs_Drakes
 {
@@ -43,15 +44,16 @@ namespace Ducks_vs_Drakes
 
         bool MouseCollide()
         {
-            return (this.sprPosition.X + this.sprRectangle.Width > mouse.X &&
-                    this.sprPosition.X < mouse.X &&
-                     this.sprPosition.Y + this.sprRectangle.Height > mouse.Y &&
-                     this.sprPosition.Y < mouse.Y);
+            return ((mouse.X > sprPosition.X) &&
+                    (mouse.X < sprPosition.X + sprRectangle.Width) &&
+                    (mouse.Y > sprPosition.Y) &&
+                    (mouse.Y < sprPosition.Y + sprRectangle.Height));
         }
 
         int howManyCollides()
         {
             int howMany = 0;
+
             foreach (ColoredBoxes spr in MyGame.Components)
             {
                 if (this != spr)
@@ -82,18 +84,22 @@ namespace Ducks_vs_Drakes
             if (sprPosition.X < scrBounds.Left)
             {
                 sprPosition.X = scrBounds.Left;
+                this.speed.X *= -1;
             }
             if (sprPosition.X > scrBounds.Width - sprRectangle.Width)
             {
                 sprPosition.X = scrBounds.Width - sprRectangle.Width;
+                this.speed.X *= -1;
             }
             if (sprPosition.Y < scrBounds.Top)
             {
                 sprPosition.Y = scrBounds.Top;
+                this.speed.Y *= -1;
             }
             if (sprPosition.Y > scrBounds.Height - sprRectangle.Height)
             {
                 sprPosition.Y = scrBounds.Height - sprRectangle.Height;
+                this.speed.Y *= -1;
             }
         }
 
@@ -113,12 +119,13 @@ namespace Ducks_vs_Drakes
         public override void Update(GameTime gameTime)
         {
             mouse = Mouse.GetState();
+
             if (mouse.LeftButton == ButtonState.Pressed)
             {
                 if (MouseCollide())
                 {
                     MyGame.Score++;
-                    this.Dispose();
+                    MyGame.Components.Remove(this);
                 }
             }
 

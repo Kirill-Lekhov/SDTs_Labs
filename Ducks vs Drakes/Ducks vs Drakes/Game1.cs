@@ -13,22 +13,37 @@ namespace Ducks_vs_Drakes
     {
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
-        private Texture2D Circle;
-        private Vector2 position = new Vector2(150, 30);
+
         MouseState mouse;
-        Vector2 center;
-        
-        //spriteComp PlayerOneBoard, PlayerTwoBoard, Ball;
-        //Texture2D GameShapes, BackGround;
+        private Texture2D Buttons;
+        Texture2D BackGround;
+        bool BackGroundEnable = false;
 
-        //Random randNum;
+        // Кнопки
+        public short STATE = 3;
+        public button Button1;
+        public button Button2;
+        public button Button3;
+        public bool clicked = false;
 
+        // Для проверки попадания в окружность
+        private Texture2D CircleTexture;
+        Vector2 CircleCenter;
+        private Vector2 CirclePosition = new Vector2(150, 30);
+        CircleComp Circle;
+
+        //Для игры в понг
+        spriteComp PlayerOneBoard, PlayerTwoBoard, Ball;
+        Texture2D GameShapes;
+        KeyboardState kbState;
+        Rectangle Current_Rect;
+        float X_change, Y_change, change = 5;
+
+        //Для "стрельбы" по кубикам
+        Random randNum;
         public int Score;
-        //bool is_win = false;
-
-        //mouse click controller
-        //bool is_MouseLB_Pressed = false;
-        //Vector2 new_position = new Vector2();
+        bool is_win = false;
+        int time = 0;
 
         public Game1()
         {
@@ -48,9 +63,11 @@ namespace Ducks_vs_Drakes
 
             base.Initialize();
 
-            //mouse click controller
-            center.X = position.X + 250 + 8;
-            center.Y = position.Y + 250 + 8;
+            //Для проверки попадания в окружность
+            CircleCenter.X = CirclePosition.X + 250 + 8;
+            CircleCenter.Y = CirclePosition.Y + 250 + 8;
+
+            //Делает видимым курсор
             this.IsMouseVisible = true;
         }
 
@@ -63,32 +80,57 @@ namespace Ducks_vs_Drakes
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
             Services.AddService(typeof(SpriteBatch), spriteBatch);
-            Circle = Content.Load<Texture2D>("Circle");
 
-            //GameShapes = Content.Load<Texture2D>("Shapes");
+            CircleTexture = Content.Load<Texture2D>("Circle");
+            GameShapes = Content.Load<Texture2D>("Shapes");
+            Buttons = Content.Load<Texture2D>("Buttons");
+            BackGround = Content.Load<Texture2D>("background");
 
-            //randNum = new Random();
-            
-            //CreateNewObject();
+            randNum = new Random();
 
-            //BackGround = Content.Load<Texture2D>("background");
+            LoadGame(STATE);
             // TODO: use this.Content to load your game content here
         }
 
-        protected void CreateNewObject()
+        protected void LoadGame(short type_objects)
         {
-            //PlayerOneBoard = new spriteComp(this, ref GameShapes, new Rectangle(0, 0, 20, 100), new Vector2(100, 150));
-            //PlayerTwoBoard = new spriteComp(this, ref GameShapes, new Rectangle(26, 0, 20, 100), new Vector2(600, 150));
-            //Ball = new spriteComp(this, ref GameShapes, new Rectangle(51, 0, 20, 20), new Vector2(400, 150));
+            Components.Clear();
+            BackGroundEnable = false;
 
-            //Components.Add(PlayerOneBoard);
-            //Components.Add(PlayerTwoBoard);
-            //Components.Add(Ball);
+            switch (type_objects)
+            {
+                case 0:
+                    PlayerOneBoard = new spriteComp(this, ref GameShapes, new Rectangle(0, 0, 20, 100), new Vector2(100, 150));
+                    PlayerTwoBoard = new spriteComp(this, ref GameShapes, new Rectangle(26, 0, 20, 100), new Vector2(600, 150));
+                    Ball = new spriteComp(this, ref GameShapes, new Rectangle(51, 0, 20, 20), new Vector2(400, 150));
 
-            //for (int i = 0; i < 10; i++)
-            //{
-            //    Components.Add(new ColoredBoxes(this, ref GameShapes, new Rectangle(51, 0, 20, 100), i));
-            //}
+                    Components.Add(PlayerOneBoard);
+                    Components.Add(PlayerTwoBoard);
+                    Components.Add(Ball);
+                    BackGroundEnable = true;
+
+                    break;
+
+                case 1:
+                    for (int i = 0; i < 10; i++)
+                        Components.Add(new ColoredBoxes(this, ref GameShapes, new Rectangle(51, 0, 20, 20), i));
+
+                    break;
+
+                case 2:
+                    Circle = new CircleComp(this, ref CircleTexture, CirclePosition, CircleCenter);
+                    Components.Add(Circle);
+                    break;
+
+                case 3:
+                    Button1 = new button(this, ref Buttons, new Rectangle(0, 100, 100, 50), new Vector2(350, 100));
+                    Button2 = new button(this, ref Buttons, new Rectangle(0, 50, 100, 50), new Vector2(350, 175));
+                    Button3 = new button(this, ref Buttons, new Rectangle(0, 0, 100, 50), new Vector2(350, 250));
+                    Components.Add(Button1);
+                    Components.Add(Button2);
+                    Components.Add(Button3);
+                    break;
+            }
         }
 
         /// <summary>
@@ -113,114 +155,104 @@ namespace Ducks_vs_Drakes
             // TODO: Add your update logic here
 
             mouse = Mouse.GetState();
+
             if (mouse.LeftButton == ButtonState.Pressed)
-                if (IsPointInCircle()) Window.Title = "Вы попали в мишень!";
-                else Window.Title = "Вы не попали в мишень!";
+                clicked = true;
 
+                switch (STATE)
+                {
+                    case 0:
+                        kbState = Keyboard.GetState();
+                        Current_Rect = PlayerOneBoard.GetRectangle();
+                        X_change = 0;
+                        Y_change = 0;
 
-            //if (is_win == false)
-            //{
-            //    Window.Title = "Уничтожено " + Score.ToString() + " за " + gameTime.TotalGameTime.Seconds + " с."; 
-            //}
+                        if (kbState.IsKeyDown(Keys.Up))
+                            Y_change -= change;
+                        if (kbState.IsKeyDown(Keys.Down))
+                            Y_change += change;
+                        if (kbState.IsKeyDown(Keys.Left))
+                            X_change -= change;
+                        if (kbState.IsKeyDown(Keys.Right))
+                            X_change += change;
 
-            //if (Score == 10 && is_win == false)
-            //{
-            //    Window.Title = "Вы уничтожили всех за: " + gameTime.TotalGameTime.Seconds + " с.";
-            //}
-            // Keyboard controller
-            //KeyboardState kbState = Keyboard.GetState();
-            //Rectangle Current_Rect = PlayerOneBoard.GetRectangle();
-            //float X_change = 0, Y_change = 0, change = 1;
+                        PlayerOneBoard.set_position(X_change, Y_change);
 
-            //if (kbState.IsKeyDown(Keys.Up))
-            //    Y_change -= change;
-            //if (kbState.IsKeyDown(Keys.Down))
-            //    Y_change += change;
-            //if (kbState.IsKeyDown(Keys.Left))
-            //    X_change -= change;
-            //if (kbState.IsKeyDown(Keys.Right))
-            //    X_change += change;
+                        if (!PlayerOneBoard.check_all_elements_collision())
+                            PlayerOneBoard.set_position(-X_change, -Y_change);
 
-            //PlayerOneBoard.set_position(X_change, Y_change);
+                        PlayerOneBoard.Check();
 
-            //if (!PlayerOneBoard.check_all_elements_collision())
-            //    PlayerOneBoard.set_position(-X_change, -Y_change);
+                        X_change = 0;
+                        Y_change = 0;
 
-            //PlayerOneBoard.Check();
+                        if (kbState.IsKeyDown(Keys.W))
+                            Y_change -= change;
+                        if (kbState.IsKeyDown(Keys.S))
+                            Y_change += change;
+                        if (kbState.IsKeyDown(Keys.A))
+                            X_change -= change;
+                        if (kbState.IsKeyDown(Keys.D))
+                            X_change += change;
 
-            //X_change = 0;
-            //Y_change = 0;
+                        PlayerTwoBoard.set_position(X_change, Y_change);
 
-            //if (kbState.IsKeyDown(Keys.W))
-            //    Y_change -= change;
-            //if (kbState.IsKeyDown(Keys.S))
-            //    Y_change += change;
-            //if (kbState.IsKeyDown(Keys.A))
-            //    X_change -= change;
-            //if (kbState.IsKeyDown(Keys.D))
-            //    X_change += change;
+                        if (!PlayerTwoBoard.check_all_elements_collision())
+                            PlayerTwoBoard.set_position(-X_change, -Y_change);
 
-            //PlayerTwoBoard.set_position(X_change, Y_change);
+                        PlayerTwoBoard.Check();
+                        break;
 
-            //if (!PlayerTwoBoard.check_all_elements_collision())
-            //    PlayerTwoBoard.set_position(-X_change, -Y_change);
+                    case 1:
+                        if (is_win == false)
+                        {
+                            Window.Title = "Уничтожено " + Score.ToString() + " за " + time + " с.";
+                            time = gameTime.TotalGameTime.Seconds;
+                        }
 
-            //PlayerTwoBoard.Check();
+                        if (Score == 10 && is_win == false)
+                        {
+                            Window.Title = "Вы уничтожили всех за: " + time + " с.";
+                            is_win = true;
+                        }
+                        break;
 
+                    case 2:
+                        if ((mouse.LeftButton == ButtonState.Released) && (clicked == true))
+                        {
+                            Console.WriteLine(Circle.IsPointInCircle(mouse));
 
+                            if (Circle.IsPointInCircle(mouse))
+                                Window.Title = "Вы попали в мишень!";
+                            else
+                                Window.Title = "Вы не попали в мишень!";
 
-            //mouse move controller
-            //MouseState mState = Mouse.GetState();
-            //Ball.sprPosition.Y = mState.Y;
-            //Ball.sprPosition.X = mState.X;
+                            clicked = false;
+                        }
 
-            //Mouse Click Controller
-            //MouseState mState = Mouse.GetState();
+                        break;
 
-            //if (mState.LeftButton == ButtonState.Pressed)
-            //{
-            //    is_MouseLB_Pressed = true;
-            //    new_position.X = mState.X;
-            //    new_position.Y = mState.Y;
-            //}
+                    case 3:
+                        if ((mouse.LeftButton == ButtonState.Released) && (clicked == true))
+                        {
+                            if (Button1.Check(mouse))
+                                STATE = 0;
 
-            //if (is_MouseLB_Pressed)
-            //{
-            //    if (new_position.X - Ball.sprPosition.X > 0)
-            //    {
-            //        Ball.sprPosition.X += 1;
-            //    }
-            //    else 
-            //    {
-            //        Ball.sprPosition.X -= 1;
-            //    }
+                            if (Button2.Check(mouse))
+                                STATE = 1;
 
-            //    if (new_position.Y - Ball.sprPosition.Y > 0)
-            //    {
-            //        Ball.sprPosition.Y += 1;
-            //    }
-            //    else
-            //    {
-            //        Ball.sprPosition.Y -= 1;
-            //    }
+                            if (Button3.Check(mouse))
+                                STATE = 2;
 
-            //    if (Ball.sprPosition == new_position)
-            //    {
-            //        is_MouseLB_Pressed = false;
-            //    }
-            //}
-
+                            clicked = false;
+                            LoadGame(STATE);
+                        }
+                    
+                        break;
+                }
 
             base.Update(gameTime);
         }
-
-        bool IsPointInCircle()
-        {
-            double length = Math.Pow((Math.Pow((mouse.X - center.X), 2) + Math.Pow((mouse.Y - center.Y), 2)), 0.5);
-            if (length <= 251) return true;
-            else return false;
-        }
-
 
         /// <summary>
         /// This is called when the game should draw itself.
@@ -231,12 +263,15 @@ namespace Ducks_vs_Drakes
             graphics.GraphicsDevice.Clear(Color.CornflowerBlue);
 
             spriteBatch.Begin();
-            spriteBatch.Draw(Circle, position, Color.White);
-            spriteBatch.End();
 
-            //spriteBatch.Draw(BackGround, new Rectangle(0, 0, 800, 480), Color.White);
+            if (BackGroundEnable)
+            {
+                spriteBatch.Draw(BackGround, new Rectangle(0, 0, 800, 480), Color.White);
+            }
+            
             // TODO: Add your drawing code here
             base.Draw(gameTime);
+            spriteBatch.End();
             //spriteBatch.End();
         }
     }
